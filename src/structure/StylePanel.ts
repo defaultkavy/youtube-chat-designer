@@ -39,7 +39,7 @@ export class StylePanel extends $Container {
                 $('div').content([
                     new SelectInput('display').label('Display').add([
                         ['block', 'inline', 'flex', 'none'].map(value => $('option').content(value).value(value))
-                    ]),
+                    ]).value(this.data.display),
                     new RangeInput('opacity').value(this.data.opacity).unit('px').min(0).max(1).label('Opacity').self($input => {$input.$range.step(0.01); $input.$value.step(0.1)}),
                 ])
             ]),
