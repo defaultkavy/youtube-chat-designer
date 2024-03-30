@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+	{
+		"label": "server",
+		"type": "shell",
+		"command": "${workspaceFolder}/scripts/server.sh"
+	},
+	{
+		"label": "vite",
+		"type": "shell",
+		"command": "${workspaceFolder}/scripts/vite.sh",
+		"problemMatcher": []
+	},
+	{
+		"label": "caddy",
+		"type": "npm",
+		"script": "caddy-dev"
+	},
+	{
+		"label": "vite-build",
+		"type": "shell",
+		"command": "${workspaceFolder}/scripts/vite-build.sh"
+	},
+	{
+		"label": "dev-startup",
+		"dependsOn": [
+			"server",
+			"vite"
+		],
+		"problemMatcher": []
+	}
+]
+}

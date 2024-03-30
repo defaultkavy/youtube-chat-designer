@@ -1,0 +1,17 @@
+{
+  "name": "ytchat",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "sass": "^1.72.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "colortranslator": "^4.1.0",
+    "fluentx": "../fluentx",
+    "vite": "^5.2.6"
+  }
+}

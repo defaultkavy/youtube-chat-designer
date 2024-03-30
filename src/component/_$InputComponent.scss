@@ -1,0 +1,86 @@
+.input-component {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #ffffff15;
+    border-radius: 5px;
+    input.value {
+        font-family: Noto Sans Mono;
+    }
+
+    .unit { 
+        display: none;
+    }
+
+    select {
+        height: 2rem;
+        width: 100%;
+        max-width: 100px;
+        border: none;
+        padding: 0.4rem 0.6rem;
+        background-color: #ffffff20;
+        border-radius: 5px;
+        color: white;
+
+        option {
+            background-color: #ffffff20;
+            color: black;
+        }
+    }
+
+    &.range {
+        & > div {
+            display: flex;
+            gap: 0.2rem;
+            align-items: center;
+            justify-content: end;
+            input.value {
+                background-color: transparent;
+                color: white;
+                border: none;
+                text-align: right;
+                padding-top: 0.2rem;
+                width: 2rem;
+            }
+
+            input.range {
+                appearance: none;
+                height: 5px;
+                background-color: #ffffff50;
+                border-radius: 10px;
+                outline: none;
+
+                &::-webkit-slider-thumb, &::-moz-range-thumb {
+                    background-color: #000000;
+                }
+            }
+        }
+    }
+
+    &.color {
+
+        & > div {
+            display: flex;
+            gap: 0.2rem;
+            justify-content: end;
+        }
+        input.value {
+            background-color: transparent;
+            color: white;
+            border: none;
+            text-align: right;
+            padding-top: 0.2rem;
+            width: 4rem;
+        }
+
+        input.color {
+            padding: 0;
+            appearance: none;
+            border: none;
+            background-color: #00000000;
+            width: 30px;
+        }
+    }
+}
