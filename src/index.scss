@@ -44,6 +44,9 @@ button {
     &.done {
         background-color: rgb(42, 190, 91);
     }
+    &.error {
+        background-color: #e44141;
+    }
 }
 
 .button-group {

@@ -17,11 +17,16 @@ export class StylePanel extends $Container {
         this.name = name;
         this.layout();
         this.on('input', e => {
-            this.role_model_list.forEach(([role, model]) => {
-                model.update(this)
-                $chat.updateStyle(this.name, model, [role]);
-            });
+            this.update();
         })
+    }
+
+    update() {
+        this.role_model_list.forEach(([role, model]) => {
+            model.update(this)
+            $chat.updateStyle(this.name, model, [role]);
+        });
+        return this;
     }
 
     layout() {

@@ -26,5 +26,5 @@
 
     "experimentalDecorators": true
   },
-  "exclude": ["dist"]
+  "exclude": ["dist", "docs"]
 }

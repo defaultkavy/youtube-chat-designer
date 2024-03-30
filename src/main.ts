@@ -6,6 +6,7 @@ import { YouTubeChat } from './structure/YouTubeChat';
 import { $Input } from 'fluentx/lib/$Input';
 import { ColorInput } from './component/ColorInput';
 import { ytchat_css } from './data/ytchat';
+import { config } from './config';
 
 export const ROLE_MODEL_MAP = new Map<string, Map<string, StyleModel>>();
 const ROLE_LIST = ['Normal', 'Member', 'Moderator', 'Owner'];
@@ -22,42 +23,34 @@ export const $chat = new YouTubeChat().css({backgroundColor: '#131313'})
   .send({name: 'Owner User', message: 'Try to send message for test your design.', role: 'Owner'})
 
 init();
-function init() {
+function init(data = defaultStyle) {
   ROLE_MODEL_MAP.clear();
   for (const role of ROLE_LIST) {
     const STYLE_MAP = new Map<string, StyleModel>()
-    ROLE_MODEL_MAP.set(role, STYLE_MAP)
+    ROLE_MODEL_MAP.set(role, STYLE_MAP);
     for (const element of ELEMENT_LIST) {
-      const model = new StyleModel(defaultStyle[role][element]);
+      const model = new StyleModel(data[role][element]);
       STYLE_MAP.set(element, model)
       $chat.updateStyle(element, model, [role])
     }
   }
-
-  for (const element of ELEMENT_LIST) PANEL_MAP.set(element, new StylePanel(element, IS_TEXT_ELEMENT.includes(element) ? 'text' : IS_IMAGE_ELEMENT.includes(element) ? 'image' : 'element'))
-}
-
-function exportJson() {
-  const json = {};
-  for (const [role, element_model_map] of ROLE_MODEL_MAP.entries()) {
-    const element_json = {};
-    for (const [element, model]of element_model_map.entries()) {
-      element_json[element] = model.data
-    }
-    json[role] = element_json;
+  $view.deleteAllView().clear();
+  for (const element of ELEMENT_LIST) {
+    const $panel = new StylePanel(element, IS_TEXT_ELEMENT.includes(element) ? 'text' : IS_IMAGE_ELEMENT.includes(element) ? 'image' : 'element');
+    PANEL_MAP.set(element, $panel)
+    $view.setView(element, $panel)
   }
-  return json;
 }
 
 
 $('app').content([
-  $('h1').content(['YouTube Chat Designer v1.0.0', $('span').content('DEFAULTKAVY')]),
+  $('h1').content(['YouTube Chat Designer', $('span').content(config.version)]),
   $('div').class('content').content([
     $('div').class('console').content([
       $('div').class('menu').content([
         $('div').class('action-row').content([
           $('div').class('role-list').content([
-            $('button').content('ROLE').on('click', (e, $button) => {
+            $('button').content('ROLE').on('click', () => {
               const $input_list = $<$Input>('::.role-checkbox');
               const IS_ALL_CHECKED = !$input_list.find($input => $input.checked() === false);
               $input_list
@@ -98,8 +91,8 @@ $('app').content([
                 $button.on('click', async (e) => {
                   const json_string = await navigator.clipboard.readText();
                   try {
-                    const json = JSON.parse(json_string)
-                    console.debug(json)
+                    const json = JSON.parse(json_string);
+                    init(json);
                   } catch (err) {
                     $button.content('Error!').class('error');
                     timer = setTimeout(() => {
@@ -108,6 +101,7 @@ $('app').content([
                     }, 3000);
                     return;
                   }
+                  load();
                   $button.content('Pasted!').class('done')
                   if (timer) clearTimeout(timer);
                   timer = setTimeout(() => {
@@ -148,8 +142,7 @@ $('app').content([
         ]),
         $('div').class('element-list').content($content => [
           ELEMENT_LIST.map(id => {
-            $view.set(id, PANEL_MAP.get(id)!)
-            return $('button').staticClass('element-button').content(id).on('click', (e, $button) => $view.switch(id))
+            return $('button').staticClass('element-button').content(id).on('click', (e, $button) => $view.switchView(id))
               .self($button => {
                 $view.event.on('switch', content_id => {
                   if (content_id !== id) $button.removeClass('active');
@@ -198,7 +191,8 @@ load();
 
 exportCSS();
 function load() {
-  $view.switch('Message');
+  $view.switchView('Message');
+  $<$Input>('::.role-checkbox')?.forEach($input => $input.checked(false));
   $<$Input>(':#normal')?.checked(true);
   refreshPanel();
 }
@@ -244,4 +238,16 @@ function exportCSS() {
   function toCssProp(str: string) {
     return str.replaceAll(/[A-Z]/g, $1 => `-${$1.toLowerCase()}`)
   }
+}
+
+function exportJson() {
+  const json = {};
+  for (const [role, element_model_map] of ROLE_MODEL_MAP.entries()) {
+    const element_json = {};
+    for (const [element, model]of element_model_map.entries()) {
+      element_json[element] = model.data
+    }
+    json[role] = element_json;
+  }
+  return json;
 }
