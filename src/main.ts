@@ -9,7 +9,7 @@ import { ytchat_css } from './data/ytchat';
 
 export const ROLE_MODEL_MAP = new Map<string, Map<string, StyleModel>>();
 const ROLE_LIST = ['Normal', 'Member', 'Moderator', 'Owner'];
-const ELEMENT_LIST = ['Message', 'Name', 'Badge', 'Avatar', 'Author Area', 'Content Area', 'Outer Area'];
+const ELEMENT_LIST = ['Message', 'Name', 'Avatar', 'Author Area', 'Content Area', 'Outer Area'];
 const IS_TEXT_ELEMENT = ['Message', 'Name', 'Timestamp'];
 const IS_IMAGE_ELEMENT = ['Badge', 'Avatar'];
 const PANEL_MAP = new Map<string, StylePanel>();
@@ -18,8 +18,8 @@ const $view = $('view');
 export const $chat = new YouTubeChat().css({backgroundColor: '#131313'})
   .send({name: 'Normal User', message: 'Hover mouse on the message will show the author role info.', role: 'Normal'})
   .send({name: 'Member User', message: 'You can use Shift + Left Click on Role list to select multiple role!', role: 'Member'})
-  .send({name: 'Moderator User', message: 'yoyo', role: 'Moderator'})
-  .send({name: 'Owner User', message: 'Using the input panel to send message for testing.', role: 'Owner'})
+  .send({name: 'Moderator User', message: 'If you want to save your settings, using Copy JSON and save it, you can paste the JSON to recovery your settings.', role: 'Moderator'})
+  .send({name: 'Owner User', message: 'Try to send message for test your design.', role: 'Owner'})
 
 init();
 function init() {
@@ -46,35 +46,18 @@ function exportJson() {
     }
     json[role] = element_json;
   }
-  console.debug(json);
   return json;
 }
 
 
 $('app').content([
-  $('h1').content(['YouTube Chat Designer v1.0', $('span').content('DEFAULTKAVY')]),
+  $('h1').content(['YouTube Chat Designer v1.0.0', $('span').content('DEFAULTKAVY')]),
   $('div').class('content').content([
     $('div').class('console').content([
       $('div').class('menu').content([
         $('div').class('action-row').content([
           $('div').class('role-list').content([
-            $('span').content('Role'),
-            $('div').content([
-              ROLE_LIST.map(id => [
-                $('div').class('role').content($div => [
-                  $('input').class('role-checkbox').type('checkbox').value(id).id(id.toLowerCase()).on('input', refreshPanel),
-                  $('label').content(id).for(id.toLowerCase())
-                    .on('click', (e) => {
-                      const checkboxes = $<$Input>('::.role-checkbox')
-                      if (e.shiftKey) return;
-                      checkboxes.forEach($input => {if ($input.id() !== id.toLowerCase()) $input.checked(false)})
-                    })
-                ])
-              ])
-            ])
-          ]),
-          $('div').class('button-list').content([
-            $('button').content('Select All').on('click', (e, $button) => {
+            $('button').content('ROLE').on('click', (e, $button) => {
               const $input_list = $<$Input>('::.role-checkbox');
               const IS_ALL_CHECKED = !$input_list.find($input => $input.checked() === false);
               $input_list
@@ -82,8 +65,85 @@ $('app').content([
                 .forEach($input => $input.checked(!IS_ALL_CHECKED))
               refreshPanel();
             }),
-            $('button').content('Export JSON').on('click', () => exportJson()),
-            $('button').content('Export CSS').on('click', () => exportCSS())
+            $('div').content([
+              ROLE_LIST.map(id => [
+                $('div').class('role').content($div => [
+                  $('input').class('role-checkbox').type('checkbox').value(id).id(id.toLowerCase()).on('input', refreshPanel),
+                  $('label').content(id).for(id.toLowerCase())
+                    .on('click', (e) => {
+                      const $input_list = $<$Input>('::.role-checkbox');
+                      const $self_input = $div.$<$Input>(`input#${id.toLowerCase()}`);
+                      const IS_MULTI_CHECKED = $input_list.filter($input => $input.checked()).length > 1;
+                      if (e.shiftKey) {
+                        if (IS_MULTI_CHECKED) return;
+                        else {
+                          if ($self_input.checked()) return e.preventDefault();
+                          return
+                        };
+                      }
+                      if ($self_input.checked()) return e.preventDefault();
+                      $input_list.forEach($input => {
+                        if ($input.id() !== id.toLowerCase()) $input.checked(false)
+                      })
+                    })
+                ])
+              ])
+            ])
+          ]),
+          $('div').class('button-list').content([
+            $('div').class('button-group').content([
+              $('span').content('JSON'),
+              $('button').content('Paste').self($button => {
+                let timer: Timer | undefined;
+                $button.on('click', async (e) => {
+                  const json_string = await navigator.clipboard.readText();
+                  try {
+                    const json = JSON.parse(json_string)
+                    console.debug(json)
+                  } catch (err) {
+                    $button.content('Error!').class('error');
+                    timer = setTimeout(() => {
+                      $button.removeClass('error').content('Paste');
+                      timer = undefined;
+                    }, 3000);
+                    return;
+                  }
+                  $button.content('Pasted!').class('done')
+                  if (timer) clearTimeout(timer);
+                  timer = setTimeout(() => {
+                    $button.removeClass('done').content('Paste');
+                    timer = undefined;
+                  }, 3000);
+                })
+              }),
+              $('button').content('Copy').self($button => {
+                let timer: Timer | undefined;
+                $button.on('click', (e) => {
+                  navigator.clipboard.writeText(JSON.stringify(exportJson()));
+                  $button.content('Copied!').class('done')
+                  if (timer) clearTimeout(timer);
+                  timer = setTimeout(() => {
+                    $button.removeClass('done').content('Copy');
+                    timer = undefined;
+                  }, 3000);
+                })
+              })
+            ]),
+            $('div').class('button-group').content([
+              $('span').content('CSS'),
+              $('button').content('Copy').self($button => {
+                let timer: Timer | undefined;
+                $button.on('click', (e) => {
+                  navigator.clipboard.writeText(exportCSS());
+                  $button.content('Copied!').class('done')
+                  if (timer) clearTimeout(timer);
+                  timer = setTimeout(() => {
+                    $button.removeClass('done').content('Copy');
+                    timer = undefined;
+                  }, 3000);
+                })
+              })
+            ])
           ]),
         ]),
         $('div').class('element-list').content($content => [
@@ -179,8 +239,7 @@ function exportCSS() {
       css += `${selector} {\n${stylesheet}\n}\n\n`
     }
   }
-
-  console.debug(css)
+  return css;
 
   function toCssProp(str: string) {
     return str.replaceAll(/[A-Z]/g, $1 => `-${$1.toLowerCase()}`)

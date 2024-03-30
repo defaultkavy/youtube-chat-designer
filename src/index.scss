@@ -36,8 +36,30 @@ button {
     color: white;
     height: 100%;
     cursor: pointer;
-    &:hover {
+    font-family: var(--font-family);
+    &:hover, &:focus {
         background-color: #ffffff10;
+        outline: none;
+    }
+    &.done {
+        background-color: rgb(42, 190, 91);
+    }
+}
+
+.button-group {
+    border: 1px solid #ffffff20;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-content: stretch;
+    span {
+        padding: 10px;
+        color: #ffffffaa;
+        font-weight: 700;
+    }
+    button {
+        border: none;
+        border-radius: 0;
     }
 }
 
@@ -55,6 +77,10 @@ app {
         }
     }
 
+    label, button {
+        user-select: none;
+    }
+
     .content {
         display: flex;
         gap: 1rem;
@@ -62,10 +88,6 @@ app {
         .console {
             width: 100%;
             max-width: 60%;
-
-            label, button {
-                user-select: none;
-            }
 
             .menu {
                 display: flex;
@@ -88,10 +110,12 @@ app {
                         border-radius: 10px;
                         width: fit-content;
                         overflow: hidden;
-                        span {
-                            padding: 10px;
+                        button {
                             color: #ffffffaa;
                             font-weight: 700;
+                            border-radius: 0;
+                            border: none;
+                            height: auto;
                         }
                         & > div {
                             display: flex;
