@@ -17,10 +17,10 @@ const PANEL_MAP = new Map<string, StylePanel>();
 
 const $view = $('view');
 export const $chat = new YouTubeChat().css({backgroundColor: '#131313'})
-  .send({name: 'Normal User', message: 'Hover mouse on the message will show the author role info.', role: 'Normal'})
-  .send({name: 'Member User', message: 'Shift + Left Click on Role list to select multiple role, edit selected role settings in once.', role: 'Member'})
-  .send({name: 'Moderator User', message: 'If you want to save your settings, using Copy JSON and save it, you can paste the JSON to recovery your settings.', role: 'Moderator'})
-  .send({name: 'Owner User', message: 'Try to send message for test your design.', role: 'Owner'})
+  .send({name: 'ひとり', message: 'Hover mouse on the message will show the author role info.', role: 'Normal'})
+  .send({name: '郁代', message: 'Shift + Left Click on Role list to select multiple role, edit selected role settings in once.', role: 'Member'})
+  .send({name: 'リョウ', message: 'If you want to save your settings, using Copy JSON and save it, you can paste the JSON to recovery your settings.', role: 'Moderator'})
+  .send({name: '虹夏', message: 'Try to send message for test your design.', role: 'Owner'})
 
 init();
 

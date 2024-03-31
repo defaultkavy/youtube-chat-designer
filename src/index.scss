@@ -369,15 +369,17 @@ yt-live-chat-text-message-renderer {
         width: 100%;
         top: 0;
         left: 0;
-        background: linear-gradient(270deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%);
+        background: linear-gradient(270deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 100%);
         user-select: none;
         pointer-events: none;
         display: none;
         justify-content: end;
         align-items: center;
-        color: white;
+        color: #ffffff90;
         padding-right: 10px;
         box-sizing: border-box;
+        font-weight: 700;
+        font-size: 1.2rem;
     }
     #author-photo {
         overflow: hidden;

@@ -1,6 +1,7 @@
 import { $Container, $Element } from "fluentx";
 import { StyleModel } from "./StyleModel";
 import { ROLE_MODEL_MAP } from "../main";
+import { AVATAR_FILES } from "../data/avatar";
 
 export interface YouTubeMessageData {
     name: string;
@@ -35,7 +36,7 @@ export class YouTubeMessage extends $Container {
             ]),
             this.$hint,
             this.$avatar.content([
-                $('img').src('/avatar.png')
+                $('img').src(`/${this.avatar_url}`)
             ]),
             this.$content.content([
                 this.$timestamp,
@@ -97,5 +98,14 @@ export class YouTubeMessage extends $Container {
             backgroundColor: '#ff000030',
             display: 'block'
         })
+    }
+
+    private get avatar_url() {
+        const array = this.data.role === 'Normal' ? AVATAR_FILES.bocchi
+            : this.data.role === 'Member' ? AVATAR_FILES.kita
+            : this.data.role === 'Moderator' ? AVATAR_FILES.ryo
+            : AVATAR_FILES.nijika;
+        
+        return array[Math.floor(Math.random() * array.length)]
     }
 }
