@@ -1,13 +1,22 @@
 export const ytchat_css = `yt-live-chat-renderer yt-live-chat-header-renderer,
 yt-live-chat-renderer yt-live-chat-ticker-renderer,
 yt-live-chat-renderer yt-live-chat-message-input-renderer,
-yt-live-chat-renderer yt-reaction-control-panel-overlay-view-model,
+yt-live-chat-renderer #reaction-control-panel-overlay,
+yt-live-chat-renderer #action-panel,
+yt-live-chat-renderer #inline-toast-container,
+yt-live-chat-renderer #panel-pages,
+yt-live-chat-renderer #promo,
 yt-live-chat-viewer-engagement-message-renderer,
 yt-live-chat-banner-manager,
 yt-live-chat-docked-message {
   display: none !important;
 }
-
+#item-scroller {
+  overflow: hidden !important;
+}
+html, body, yt-live-chat-app, yt-live-chat-renderer {
+  background: #00000000 !important;
+}
 yt-live-chat-text-message-renderer {
   position: relative;
   overflow: hidden;

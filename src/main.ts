@@ -18,33 +18,19 @@ const PANEL_MAP = new Map<string, StylePanel>();
 const $view = $('view');
 export const $chat = new YouTubeChat().css({backgroundColor: '#131313'})
   .send({name: 'Normal User', message: 'Hover mouse on the message will show the author role info.', role: 'Normal'})
-  .send({name: 'Member User', message: 'You can use Shift + Left Click on Role list to select multiple role!', role: 'Member'})
+  .send({name: 'Member User', message: 'Shift + Left Click on Role list to select multiple role, edit selected role settings in once.', role: 'Member'})
   .send({name: 'Moderator User', message: 'If you want to save your settings, using Copy JSON and save it, you can paste the JSON to recovery your settings.', role: 'Moderator'})
   .send({name: 'Owner User', message: 'Try to send message for test your design.', role: 'Owner'})
 
 init();
-function init(data = defaultStyle) {
-  ROLE_MODEL_MAP.clear();
-  for (const role of ROLE_LIST) {
-    const STYLE_MAP = new Map<string, StyleModel>()
-    ROLE_MODEL_MAP.set(role, STYLE_MAP);
-    for (const element of ELEMENT_LIST) {
-      const model = new StyleModel(data[role][element]);
-      STYLE_MAP.set(element, model)
-      $chat.updateStyle(element, model, [role])
-    }
-  }
-  $view.deleteAllView().clear();
-  for (const element of ELEMENT_LIST) {
-    const $panel = new StylePanel(element, IS_TEXT_ELEMENT.includes(element) ? 'text' : IS_IMAGE_ELEMENT.includes(element) ? 'image' : 'element');
-    PANEL_MAP.set(element, $panel)
-    $view.setView(element, $panel)
-  }
-}
 
-
-$('app').content([
-  $('h1').content(['YouTube Chat Designer', $('span').content(config.version)]),
+const $app = $('app').content([
+  $('h1').content([
+    'YouTube Chat Designer', 
+    $('span').content(config.version), 
+    $('a').content('GitHub').href(config.github_homepage).target('_blank'),
+    $('a').content('@defaultkavy').href(config.author_link).target('_blank'),
+  ]),
   $('div').class('content').content([
     $('div').class('console').content([
       $('div').class('menu').content([
@@ -186,10 +172,30 @@ $('app').content([
       ])
     ])
   ])
-]).self($app => document.body.append($app.dom))
+])
+$(document.body).content($app)
 load();
+window.addEventListener('resize', () => checkWindowSize())
 
-exportCSS();
+function init(data = defaultStyle) {
+  ROLE_MODEL_MAP.clear();
+  for (const role of ROLE_LIST) {
+    const STYLE_MAP = new Map<string, StyleModel>()
+    ROLE_MODEL_MAP.set(role, STYLE_MAP);
+    for (const element of ELEMENT_LIST) {
+      const model = new StyleModel(data[role][element]);
+      STYLE_MAP.set(element, model)
+      $chat.updateStyle(element, model, [role])
+    }
+  }
+  $view.deleteAllView().clear();
+  for (const element of ELEMENT_LIST) {
+    const $panel = new StylePanel(element, IS_TEXT_ELEMENT.includes(element) ? 'text' : IS_IMAGE_ELEMENT.includes(element) ? 'image' : 'element');
+    PANEL_MAP.set(element, $panel)
+    $view.setView(element, $panel)
+  }
+}
+
 function load() {
   $view.switchView('Message');
   $<$Input>('::.role-checkbox')?.forEach($input => $input.checked(false));
@@ -250,4 +256,14 @@ function exportJson() {
     json[role] = element_json;
   }
   return json;
+}
+
+function checkWindowSize() {
+  if (innerWidth < 700) {
+    $(document.body).content($('div').content([
+      `Please use a screen with a width greeter than 700px. Current width: ${innerWidth}px`
+    ]))
+  } else {
+    if (!$app.inDOM()) $(document.body).content($app);
+  }
 }
