@@ -113,9 +113,26 @@ export class StylePanel extends $Container {
                 ]),
             ]),
             $('section').content([
-                $('h3').content('Border Radius'),
-                ['top-left', 'top-right', 'bottom-left', 'bottom-right'].map(corner => 
-                    new RangeInput(`border-${corner}-radius`).value(this.data[`border${propCap(corner)}Radius`]).unit('px').label(`${corner.split('-').map(str => str.charAt(0).toUpperCase() + str.slice(1)).toString().replace(',', ' ')}`) )
+                $('header').content([
+                    $('h3').content('Border Radius'),
+                    $('div').content([
+                        $('label').content('Link').for('border-radius-link'),
+                        $('input').id('border-radius-link').type('checkbox').checked(true)
+                    ])
+                ]),
+                $('div').content([
+                    ['top-left', 'top-right', 'bottom-left', 'bottom-right'].map(corner => 
+                        new RangeInput(`border-${corner}-radius`).value(this.data[`border${propCap(corner)}Radius`]).unit('px').label(`${corner.split('-').map(str => str.charAt(0).toUpperCase() + str.slice(1)).toString().replace(',', ' ')}`) 
+                        .on('input', (e, $range) => {
+                            if (!$<$Input>(':#border-radius-link')?.checked()) return;
+                            ['top-left', 'top-right', 'bottom-left', 'bottom-right'].forEach(d => {
+                                if (d === corner) return;
+                                $<RangeInput>(`:div.border-${d}-radius`)?.value($range.value())
+                            })
+                        })
+                    )
+                ])
+                    
             ]),
         ])
     }

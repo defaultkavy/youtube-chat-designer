@@ -32,7 +32,7 @@ export class RangeInput extends InputComponent {
     value(): string;
     value(value: string | undefined): this;
     value(value?: string) {
-        if (!arguments.length) return this.value();
+        if (!arguments.length) return this.$value.value();
         if (value === undefined) return this;
         if (value.match(/[a-zA-Z]/)) value = value.replaceAll(/[a-zA-Z]/g, '')
         super.value(value);
