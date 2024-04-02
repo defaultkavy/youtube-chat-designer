@@ -60,7 +60,8 @@ const $app = $('app').content([
                           return
                         };
                       }
-                      if ($self_input.checked()) return e.preventDefault();
+                      if ($self_input.checked() && !IS_MULTI_CHECKED) return e.preventDefault();
+                      if ($self_input.checked() && IS_MULTI_CHECKED) e.preventDefault();
                       $input_list.forEach($input => {
                         if ($input.id() !== id.toLowerCase()) $input.checked(false)
                       })
