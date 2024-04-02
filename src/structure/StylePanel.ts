@@ -1,4 +1,4 @@
-import { $Container } from "fluentx";
+import { $Container, $State } from "fluentx";
 import { ColorInput } from "../component/ColorInput";
 import { RangeInput } from "../component/RangeInput";
 import { SelectInput } from "../component/SelectInput";
@@ -10,6 +10,7 @@ import { firstCap, propCap } from "./util";
 export class StylePanel extends $Container {
     type: StyleType;
     name: string;
+    flex_hidden$ = $.state(false);
     constructor(name: string, type: StyleType) {
         super('div');
         this.staticClass('style-panel');
@@ -26,6 +27,7 @@ export class StylePanel extends $Container {
             model.update(this)
             $chat.updateStyle(this.name, model, [role]);
         });
+        this.flex_hidden$.set(this.data?.display !== 'flex');
         return this;
     }
 
@@ -43,6 +45,22 @@ export class StylePanel extends $Container {
                     new RangeInput('opacity').value(this.data.opacity).unit('px').min(0).max(1).label('Opacity').self($input => {$input.$range.step(0.01); $input.$value.step(0.1)}),
                 ])
             ]),
+
+            $('section').content([
+                $('h3').content('Flex'),
+                $('div').content([
+                    new SelectInput('flex-direction').label('Direction').add([
+                        ['row', 'column', 'row-reverse', 'column-reverse',].map(value => $('option').content(value).value(value))
+                    ]).value(this.data.flexDirection),
+                    new RangeInput('gap').value(this.data.gap).unit('px').min(0).max(100).label('Gap'),
+                    new SelectInput('justify-content').label('Justify Content').add([
+                        ['start', 'center', 'end', 'stretch', 'space-around', 'space-evenly', 'space-between'].map(value => $('option').content(value).value(value))
+                    ]).value(this.data.justifyContent),
+                    new SelectInput('align-items').label('Align Items').add([
+                        ['start', 'center', 'end', 'stretch', 'space-around', 'space-evenly', 'space-between'].map(value => $('option').content(value).value(value))
+                    ]).value(this.data.alignItems)
+                ])
+            ]).hide(this.flex_hidden$),
 
             this.type === 'text' ? $('section').content([
                 $('h3').content('Font'),

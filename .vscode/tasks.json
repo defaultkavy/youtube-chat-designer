@@ -25,7 +25,6 @@
 	{
 		"label": "dev-startup",
 		"dependsOn": [
-			"server",
 			"vite"
 		],
 		"problemMatcher": []

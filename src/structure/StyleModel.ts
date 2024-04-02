@@ -21,9 +21,9 @@ export class StyleModel {
         }
         const border = (dir: 'top' | 'right' | 'left' | 'bottom') => {
             return {
-                [`border${firstCap(dir)}Style`]: filterMultitype(panel.$<$Select>(`#border-${dir}-style`)?.value(), this.data[`boder${firstCap(dir)}Style`]),
-                [`border${firstCap(dir)}Color`]: filterMultitype(panel.$<$Input>(`#border-${dir}-color`)?.value(), this.data[`boder${firstCap(dir)}Color`]),
-                [`border${firstCap(dir)}Width`]: filterMultitype(panel.$<$Input>(`#border-${dir}-width`)?.value(), this.data[`boder${firstCap(dir)}Color`], true)
+                [`border${firstCap(dir)}Style`]: filterMultitype(panel.$<$Select>(`#border-${dir}-style`)?.value(), this.data[`border${firstCap(dir)}Style`]),
+                [`border${firstCap(dir)}Color`]: filterMultitype(panel.$<$Input>(`#border-${dir}-color`)?.value(), this.data[`border${firstCap(dir)}Color`]),
+                [`border${firstCap(dir)}Width`]: filterMultitype(panel.$<$Input>(`#border-${dir}-width`)?.value(), this.data[`border${firstCap(dir)}Width`], true)
             }
         }
 
@@ -62,29 +62,12 @@ export class StyleModel {
             display: filterMultitype(panel.$<$Select>('#display')?.value(), this.data.display),
             height: filterMultitype(panel.$<$Input>('#height')?.value(), this.data.height, true),
             width: filterMultitype(panel.$<$Input>('#width')?.value(), this.data.width, true),
+            flexDirection: filterMultitype(panel.$<$Input>('#flex-direction')?.value(), this.data.flexDirection),
+            justifyContent: filterMultitype(panel.$<$Input>('#justify-content')?.value(), this.data.justifyContent),
+            alignItems: filterMultitype(panel.$<$Input>('#align-items')?.value(), this.data.alignItems),
+            gap: filterMultitype(panel.$<$Input>('#gap')?.value(), this.data.gap, true),
         }
         this.data = data;
         return this;
-    }
-
-    cssObject() {
-        const json = {};
-        const convert = (passKey: string | null, data: Object) => {
-            for (let [key, value] of Object.entries(data)) {
-                key = passKey ? passKey + key.charAt(0).toUpperCase() + key.slice(1) : key;
-                if (value instanceof Object === false) {
-                    if (typeof value === 'number' && key !== 'opacity') value = `${value}px`;
-                    Object.assign(json, {[`${key}`]: value});
-                    continue;
-                }
-                convert(key, value);
-            }
-        }
-        convert(null, this.data);
-        return json
-    }
-
-    css() {
-        
     }
 }

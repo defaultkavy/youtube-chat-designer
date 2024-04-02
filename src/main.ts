@@ -22,7 +22,7 @@ export const $chat = new YouTubeChat().css({backgroundColor: '#131313'})
   .send({name: 'リョウ', message: 'If you want to save your settings, using Copy JSON and save it, you can paste the JSON to recovery your settings.', role: 'Moderator'})
   .send({name: '虹夏', message: 'Try to send message for test your design.', role: 'Owner'})
 
-init();
+modelInit();
 
 const $app = $('app').content([
   $('h1').content([
@@ -78,9 +78,10 @@ const $app = $('app').content([
                   const json_string = await navigator.clipboard.readText();
                   try {
                     const json = JSON.parse(json_string);
-                    init(json);
+                    modelInit(json);
                   } catch (err) {
-                    $button.content('Error!').class('error');
+                    $button.content('Error!').class('error').removeClass('done');
+                    if (timer) clearTimeout(timer);
                     timer = setTimeout(() => {
                       $button.removeClass('error').content('Paste');
                       timer = undefined;
@@ -88,7 +89,7 @@ const $app = $('app').content([
                     return;
                   }
                   load();
-                  $button.content('Pasted!').class('done')
+                  $button.content('Pasted!').class('done').removeClass('error')
                   if (timer) clearTimeout(timer);
                   timer = setTimeout(() => {
                     $button.removeClass('done').content('Paste');
@@ -177,15 +178,16 @@ $(document.body).content($app)
 load();
 window.addEventListener('resize', () => checkWindowSize())
 
-function init(data = defaultStyle) {
+function modelInit(data = defaultStyle) {
   ROLE_MODEL_MAP.clear();
   for (const role of ROLE_LIST) {
-    const STYLE_MAP = new Map<string, StyleModel>()
+    const STYLE_MAP = new Map<string, StyleModel>();
     ROLE_MODEL_MAP.set(role, STYLE_MAP);
     for (const element of ELEMENT_LIST) {
-      const model = new StyleModel(data[role][element]);
-      STYLE_MAP.set(element, model)
-      $chat.updateStyle(element, model, [role])
+      const initialized_data = dataInit(data[role][element]);
+      const model = new StyleModel(initialized_data);
+      STYLE_MAP.set(element, model);
+      $chat.updateStyle(element, model, [role]);
     }
   }
   $view.deleteAllView().clear();
@@ -200,7 +202,7 @@ function load() {
   $view.switchView('Message');
   $<$Input>('::.role-checkbox')?.forEach($input => $input.checked(false));
   $<$Input>(':#normal')?.checked(true);
-  refreshPanel();
+  PANEL_MAP.forEach(panel => panel.update().layout())
 }
 
 function refreshPanel() {
@@ -266,4 +268,11 @@ function checkWindowSize() {
   } else {
     if (!$app.inDOM()) $(document.body).content($app);
   }
+}
+
+function dataInit(data: Partial<CSSStyleDeclaration>) {
+  switch (undefined) {
+    case data.gap: data.gap = '0px';
+  }
+  return data;
 }
