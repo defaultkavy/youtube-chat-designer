@@ -39,7 +39,7 @@ export class YouTubeMessage extends $Container {
                 $('img').src(`/${this.avatar_url}`)
             ]),
             this.$content.content([
-                this.$timestamp,
+                this.$timestamp.content(new Intl.DateTimeFormat('en', {timeStyle: 'short'}).format(new Date())),
                 this.$author_area.content([
                     this.$name.content(this.data.name),
                     $('span').id('chat-badges').content([
@@ -72,6 +72,7 @@ export class YouTubeMessage extends $Container {
             case 'Content Area': this.$content.css(model.data); break;
             case 'Author Area': this.$author_area.css(model.data); break;
             case 'Outer Area': this.css(model.data); break;
+            case 'Time': this.$timestamp.css(model.data); break;
         }
     }
 
@@ -80,6 +81,7 @@ export class YouTubeMessage extends $Container {
             case 'Message': this.hintPosition(this.$message); break;
             case 'Name': this.hintPosition(this.$name); break;
             case 'Avatar': this.hintPosition(this.$avatar); break;
+            case 'Time': this.hintPosition(this.$timestamp); break;
             case 'Content Area': this.hintPosition(this.$content); break;
             case 'Author Area': this.hintPosition(this.$author_area); break;
             case 'Outer Area': this.hintPosition(this); break;

@@ -40,9 +40,12 @@ export class StylePanel extends $Container {
                 $('h3').content('Properties'),
                 $('div').content([
                     new SelectInput('display').label('Display').add([
-                        ['block', 'inline', 'flex', 'none'].map(value => $('option').content(value).value(value))
+                        ['block', 'inline', 'flex', 'inline-flex', 'none'].map(value => $('option').content(value).value(value))
                     ]).value(this.data.display),
                     new RangeInput('opacity').value(this.data.opacity).unit('px').min(0).max(1).label('Opacity').self($input => {$input.$range.step(0.01); $input.$value.step(0.1)}),
+                    new SelectInput('float').label('Float').add([
+                        ['left', 'right', 'none'].map(value => $('option').content(value).value(value))
+                    ]).value(this.data.float),
                 ])
             ]),
 

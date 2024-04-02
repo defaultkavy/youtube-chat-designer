@@ -399,6 +399,7 @@ yt-live-chat-text-message-renderer {
 
             #prepend-chat-badges {}
             #author-name {
+                word-wrap: break-word;
                 #chip-badges {}
             }
 
@@ -422,6 +423,7 @@ yt-live-chat-text-message-renderer {
         }
 
         #message {
+            word-wrap: break-word;
         }
 
         #deleted-state {}

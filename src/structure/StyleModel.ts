@@ -66,6 +66,7 @@ export class StyleModel {
             justifyContent: filterMultitype(panel.$<$Input>('#justify-content')?.value(), this.data.justifyContent),
             alignItems: filterMultitype(panel.$<$Input>('#align-items')?.value(), this.data.alignItems),
             gap: filterMultitype(panel.$<$Input>('#gap')?.value(), this.data.gap, true),
+            float: filterMultitype(panel.$<$Input>('#float')?.value(), this.data.float),
         }
         this.data = data;
         return this;

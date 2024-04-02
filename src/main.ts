@@ -1,7 +1,7 @@
 import { $, $Button, $Select, $Textarea } from 'fluentx';
 import { StylePanel } from './structure/StylePanel';
 import { StyleModel } from './structure/StyleModel';
-import { defaultStyle } from './data/defaultStyle';
+import { defaultStyle, init_element_style } from './data/defaultStyle';
 import { YouTubeChat } from './structure/YouTubeChat';
 import { $Input } from 'fluentx/lib/$Input';
 import { ColorInput } from './component/ColorInput';
@@ -10,8 +10,8 @@ import { config } from './config';
 
 export const ROLE_MODEL_MAP = new Map<string, Map<string, StyleModel>>();
 const ROLE_LIST = ['Normal', 'Member', 'Moderator', 'Owner'];
-const ELEMENT_LIST = ['Message', 'Name', 'Avatar', 'Author Area', 'Content Area', 'Outer Area'];
-const IS_TEXT_ELEMENT = ['Message', 'Name', 'Timestamp'];
+const ELEMENT_LIST = ['Message', 'Name', 'Avatar', 'Time', 'Author Area', 'Content Area', 'Outer Area'];
+const IS_TEXT_ELEMENT = ['Message', 'Name', 'Time'];
 const IS_IMAGE_ELEMENT = ['Badge', 'Avatar'];
 const PANEL_MAP = new Map<string, StylePanel>();
 
@@ -185,7 +185,7 @@ function modelInit(data = defaultStyle) {
     const STYLE_MAP = new Map<string, StyleModel>();
     ROLE_MODEL_MAP.set(role, STYLE_MAP);
     for (const element of ELEMENT_LIST) {
-      const initialized_data = dataInit(data[role][element]);
+      const initialized_data = dataInit(data[role][element] ?? defaultStyle[role][element] ?? init_element_style);
       const model = new StyleModel(initialized_data);
       STYLE_MAP.set(element, model);
       $chat.updateStyle(element, model, [role]);
@@ -233,6 +233,7 @@ function exportCSS() {
         case 'Avatar': selector +=  ' #author-photo'; break;
         case 'Author Area': selector +=  ' yt-live-chat-author-clip'; break;
         case 'Content Area': selector +=  ' #content'; break;
+        case 'Time': selector +=  ' #timestamp'; break;
         case 'Outer Area': break;
       }
       let stylesheet = '';
@@ -274,6 +275,7 @@ function checkWindowSize() {
 function dataInit(data: Partial<CSSStyleDeclaration>) {
   switch (undefined) {
     case data.gap: data.gap = '0px';
+    case data.float: data.float = 'none';
   }
   return data;
 }

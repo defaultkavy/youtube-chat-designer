@@ -8,7 +8,8 @@ yt-live-chat-renderer #panel-pages,
 yt-live-chat-renderer #promo,
 yt-live-chat-viewer-engagement-message-renderer,
 yt-live-chat-banner-manager,
-yt-live-chat-docked-message {
+yt-live-chat-docked-message,
+yt-live-chat-paid-message-renderer {
   display: none !important;
 }
 #item-scroller {
@@ -16,6 +17,9 @@ yt-live-chat-docked-message {
 }
 html, body, yt-live-chat-app, yt-live-chat-renderer {
   background: #00000000 !important;
+}
+yt-live-chat-text-message-renderer #message, yt-live-chat-text-message-renderer #author-name {
+  word-wrap: break-word;
 }
 yt-live-chat-text-message-renderer {
   position: relative;
